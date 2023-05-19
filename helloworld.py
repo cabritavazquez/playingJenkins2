@@ -1,0 +1,1 @@
+print('Running a python script in  Post Actions on a Declarative Jenkins Pipeline')
