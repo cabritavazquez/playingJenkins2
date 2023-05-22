@@ -26,7 +26,7 @@ pipeline{
         stage("executing some Groovy script"){
             steps{
                 script {
-                    gv.
+                    gv.scriptingApp()
                 }
             }
         }        
@@ -57,38 +57,15 @@ pipeline{
                 input(message: "Approve deploy?", ok:"Yes")
             }
         }
-        stage("push"){
-            when {
-                expression {
-                    params.isRelease
-                }
-            }
-            steps{
-                echo "build your nice project!"
-            }
-        }
-        stage("using credentials"){
-            steps{
-                echo "using credentials for..."
-                withCredentials([string(credentialsId:'server-user',variable:'USER'),string(credentialsId:'server-pass',variable:'PWD')]){
-                    echo "some script that needs credentials ${USER} ${PWD}"
-                }
-            }
-        }
         stage("executing node"){
             agent{
                 docker { image 'sebasnaa/nodeagent:1.2' }
             }
             steps{
-                sh 'node -v'
-                sh 'node holamundo.js'
+                script {
+                    gv.executeNode()
+                }
             }
         }        
-    }
-    post {
-        success {
-            sh 'python3 --version'
-            sh 'python3 helloworld.py'
-        }
     }
 }
